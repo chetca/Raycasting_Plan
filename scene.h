@@ -9,14 +9,18 @@
 class Scene
 {
 public:
-    using Segment = boost::geometry::model::segment<QPointF>;
+    //using Segment = boost::geometry::model::segment<QPointF>;
 
     Scene();
 
-    Segment targetSegment(QPointF position, QPointF direction);
+    //Segment targetSegment(QPointF position, QPointF direction);
+
+
+    //QVector<Segment> segment() const;
+    //void setSegment(const QVector<Segment> &segment);
 
 private:
-    QVector<Segment> m_segment;
+    //QVector<Segment> m_segment;
 };
 
 #endif // SCENE_H

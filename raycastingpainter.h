@@ -5,6 +5,9 @@
 
 #include <QWidget>
 #include <QPointF>
+#include <QtMath>
+
+#define PI (acos(-1.))
 
 class RaycastingPainter
 {
@@ -15,7 +18,7 @@ public:
 
     Scene *scene() const;
     void setScene(Scene *scene);
-    void castRays(QPointF position, QPointF direction, double fov, double width);
+    void castRays(QPointF position, QPointF direction, double width);
 
     double getFov() const;
     void setFov(double value);
@@ -26,6 +29,7 @@ public:
     QImage getBuffer() const;
     void setBuffer(const QImage &value);
 
+    double rayIntersectionWithSegm (QPointF pos, QPointF dir);
 private:
     Scene *m_scene = 0;
     QImage buffer;

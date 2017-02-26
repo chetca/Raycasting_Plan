@@ -2,6 +2,7 @@
 #define MAINWIDGET_H
 
 #include <QWidget>
+#include "raycastingpainter.h"
 
 namespace Ui {
 class mainwidget;
@@ -17,6 +18,8 @@ public:
 
 private:
     Ui::mainwidget *ui;
+
+    RaycastingPainter *RP;
 };
 
 #endif // MAINWIDGET_H

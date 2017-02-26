@@ -11,9 +11,9 @@ void RaycastingPainter::paint(QWidget *widget, QPointF position, QPointF directi
     //по возможности передать усилия на другие методы
 
     //Итак, можно сделать буфер. Это даст плавность кадров, но рендеринг будет медленнее
-    if (buffer.size() != size())
-        buffer = QImage(size(), QImage::Format_ARGB32);
-    castRays(position, direction, fow, width);
+    if (buffer.size() != widget->size())
+        buffer = QImage(widget->size(), QImage::Format_ARGB32);
+    castRays(position, direction, width);
 }
 
 Scene *RaycastingPainter::scene() const
@@ -26,19 +26,34 @@ void RaycastingPainter::setScene(Scene *scene)
     m_scene = scene;
 }
 
-void RaycastingPainter::castRays(QPointF position, QPointF direction, double fov, double width)
+double dist(QPointF a, QPointF b)
+{
+    return sqrt((b.x()-a.x())*(b.x()-a.x()) + (b.y()-a.y())*(b.y()-a.y()));
+}
+
+void RaycastingPainter::castRays(QPointF position, QPointF direction, double width)
 {
     //Метод описывающий бросание лучей
-    double angleBetweenRays = ((double)direction*(180/Math.PI) / width)*Math.PI /180; //делим угол обзора на маленьки кусочки - углы куда будут бросаться лучи
     double dist;   //переменная расстояния до препятствия
-    double angle = fov/2 + (double)position; //(pos+dir+plane)
-    if(angle < 0) //Если получившийся угол отрицательный
-        angle += 360 * Math.PI /180;//поворачиваем его на 2*Pi по часовой
-    if(angle > 0) //Если получившийся угол положительный
-        angle -= 360 * Math.PI /180; //поворачиваем его на 2*Pi против часовой
 
-      for (int i = 0; i < width;i++){
+    QPointF rayStep(
+                 (direction-position).y(),
+                -(direction-position).x()
+                );
+
+    for (int i = 0; i < (int)(width/2);i++){
         //Бросаем по одному лучу на каждый кусочек экрана и переходим на следующий кусочек
+        QPointF rayDirect1 (direction + rayStep);
+        QPointF rayDirect2 (direction - rayStep);
+
+        dist = rayIntersectionWithSegm(position,rayDirect1);
+
+        //... shader
+
+        dist = rayIntersectionWithSegm(position,rayDirect2);
+
+        //... shader
+
     }
 }
 
@@ -70,4 +85,14 @@ QImage RaycastingPainter::getBuffer() const
 void RaycastingPainter::setBuffer(const QImage &value)
 {
     buffer = value;
+}
+
+double RaycastingPainter::rayIntersectionWithSegm(QPointF pos, QPointF dir)
+{
+    double dist=0;
+    //for (int i=0; i<m_scene->segment().size(); i++) {
+        //take intersection point of segment and ray (with boost)...
+    //}
+
+    return dist;
 }
