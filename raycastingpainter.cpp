@@ -1,8 +1,8 @@
 #include "raycastingpainter.h"
 
-RaycastingPainter::RaycastingPainter()
+RaycastingPainter::RaycastingPainter(QWidget *parent) : QWidget(parent)
 {
-
+    m_scene = new Scene();
 }
 
 void RaycastingPainter::paint(QWidget *widget, QPointF position, QPointF direction)
@@ -12,7 +12,7 @@ void RaycastingPainter::paint(QWidget *widget, QPointF position, QPointF directi
 
     //Итак, можно сделать буфер. Это даст плавность кадров, но рендеринг будет медленнее
     if (buffer.size() != widget->size())
-        buffer = QImage(widget->size(), QImage::Format_ARGB32);
+        buffer = QImage(640,400, QImage::Format_ARGB32);
     castRays(position, direction, width);
 }
 
@@ -49,6 +49,7 @@ void RaycastingPainter::castRays(QPointF position, QPointF direction, double wid
         dist = rayIntersectionWithSegm(position,rayDirect1);
 
         //... shader
+        makeColumn(dist,i);
 
         dist = rayIntersectionWithSegm(position,rayDirect2);
 
@@ -87,12 +88,31 @@ void RaycastingPainter::setBuffer(const QImage &value)
     buffer = value;
 }
 
+void RaycastingPainter::makeColumn(double dist, int ii)
+{
+    int h = 10/dist;
+    if (dist == 1e9) {
+        h = 0;
+    }
+
+    int high = buffer.height();
+
+    for (int i=0; i<high/2-h/2; i++) {
+        buffer.setPixel(ii,i,12);
+        //в дальнейшем Qrgb заменится на текстурку
+    }
+
+    for (int i=high/2-h/2; i<high/2+h/2; i++) {
+        buffer.setPixel(ii,i,14);
+    }
+
+    for (int i=high/2+h/2; i<high; i++) {
+        buffer.setPixel(ii,i,15);
+    }
+}
+
+
 double RaycastingPainter::rayIntersectionWithSegm(QPointF pos, QPointF dir)
 {
-    double dist=0;
-    //for (int i=0; i<m_scene->segment().size(); i++) {
-        //take intersection point of segment and ray (with boost)...
-    //}
-
-    return dist;
+    return m_scene->targetSegment(pos,dir).A().x();
 }

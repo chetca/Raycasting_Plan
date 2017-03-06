@@ -1,26 +1,24 @@
 #ifndef SCENE_H
 #define SCENE_H
 
+#include "ssegment.h"
+
 #include <QPointF>
 #include <QVector>
-#include <boost/geometry.hpp>
-
+//#include <boost/geometry.hpp>
 
 class Scene
 {
 public:
-    //using Segment = boost::geometry::model::segment<QPointF>;
+
 
     Scene();
 
-    //Segment targetSegment(QPointF position, QPointF direction);
-
-
-    //QVector<Segment> segment() const;
-    //void setSegment(const QVector<Segment> &segment);
+    SSegment targetSegment(QPointF position, QPointF direction);
 
 private:
-    //QVector<Segment> m_segment;
+    QVector<SSegment> mapSegment;
+    QPointF pos, dir;
 };
 
 #endif // SCENE_H

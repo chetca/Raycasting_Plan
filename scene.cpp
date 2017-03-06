@@ -2,20 +2,27 @@
 
 Scene::Scene()
 {
-
+    pos = QPointF(0,0);
+    dir = QPointF(0,1);
 }
 
-//Scene::Segment Scene::targetSegment(QPointF position, QPointF direction)
-//{
-    //описать
-//}
+inline double getDist(QPointF a, QPointF b)
+{
+    return sqrt((b.x()-a.x())*(b.x()-a.x()) + (b.y()-a.y())*(b.y()-a.y()));
+}
 
-//QVector<Segment> Scene::segment() const
-//{
-//    return m_segment;
-//}
+SSegment Scene::targetSegment(QPointF position, QPointF direction)
+{
+    int it=-1;
+    double mx=1e9;
+    for (int i=0; i<mapSegment.size(); i++) {
+        QPointF pInter = mapSegment[i].getIntersect(position, direction);
 
-//void Scene::setSegment(const QVector<Segment> &segment)
-//{
-//    m_segment = segment;
-//}
+        if (getDist(position,pInter) < mx) {
+            mx = getDist(position, pInter);
+            it = i;
+        }
+    }
+
+    return SSegment(QPointF(mx,it),QPointF(0,0));
+}

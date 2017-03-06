@@ -26,10 +26,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += main.cpp\
         mainwidget.cpp \
     raycastingpainter.cpp \
-    scene.cpp
+    scene.cpp \
+    ssegment.cpp
 
 HEADERS  += mainwidget.h \
     raycastingpainter.h \
-    scene.h
+    scene.h \
+    ssegment.h
 
 FORMS    += mainwidget.ui

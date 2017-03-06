@@ -9,10 +9,12 @@
 
 #define PI (acos(-1.))
 
-class RaycastingPainter
+class RaycastingPainter:public QWidget
 {
+    Q_OBJECT
+
 public:
-    RaycastingPainter();
+    explicit RaycastingPainter(QWidget *parent=0);
 
     void paint(QWidget *widget, QPointF position, QPointF direction);
 
@@ -28,6 +30,8 @@ public:
 
     QImage getBuffer() const;
     void setBuffer(const QImage &value);
+
+    void makeColumn(double dist, int i);
 
     double rayIntersectionWithSegm (QPointF pos, QPointF dir);
 private:
