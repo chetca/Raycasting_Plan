@@ -2,6 +2,7 @@
 #define SSEGMENT_H
 
 #include <QPointF>
+#include <cmath>
 
 class SSegment
 {

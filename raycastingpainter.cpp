@@ -3,6 +3,7 @@
 RaycastingPainter::RaycastingPainter(QWidget *parent) : QWidget(parent)
 {
     m_scene = new Scene();
+
 }
 
 void RaycastingPainter::paint(QWidget *widget, QPointF position, QPointF direction)
@@ -41,17 +42,31 @@ void RaycastingPainter::castRays(QPointF position, QPointF direction, double wid
                 -(direction-position).x()
                 );
 
+    QPointF side1 = direction + rayStep*width/2;
+    QPointF side2 = direction - rayStep*width/2;
+
+    int it = 0;
+
+    SSegment lim[4];
+             lim[0] = SSegment (QPointF(-1e8, 1e8),QPointF( 1e8, 1e8));
+             lim[1] = SSegment (QPointF(-1e8,-1e8),QPointF( 1e8,-1e8));
+             lim[2] = SSegment (QPointF( 1e8, 1e8),QPointF( 1e8,-1e8));
+             lim[3] = SSegment (QPointF(-1e8, 1e8),QPointF(-1e8,-1e8));
+
+
+
+
     for (int i = 0; i < (int)(width/2);i++){
         //Бросаем по одному лучу на каждый кусочек экрана и переходим на следующий кусочек
         QPointF rayDirect1 (direction + rayStep);
         QPointF rayDirect2 (direction - rayStep);
 
-        dist = rayIntersectionWithSegm(position,rayDirect1);
+        dist = rayIntersectionWithSegm(position,rayDirect1,it);
 
         //... shader
         makeColumn(dist,i);
 
-        dist = rayIntersectionWithSegm(position,rayDirect2);
+        dist = rayIntersectionWithSegm(position,rayDirect2,it);
 
         //... shader
 
@@ -112,7 +127,7 @@ void RaycastingPainter::makeColumn(double dist, int ii)
 }
 
 
-double RaycastingPainter::rayIntersectionWithSegm(QPointF pos, QPointF dir)
+double RaycastingPainter::rayIntersectionWithSegm(QPointF pos, QPointF dir, int it)
 {
-    return m_scene->targetSegment(pos,dir).A().x();
+    return m_scene->targetSegment(pos,dir,it).A().x();
 }

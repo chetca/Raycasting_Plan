@@ -6,6 +6,7 @@
 #include <QWidget>
 #include <QPointF>
 #include <QtMath>
+#include <cmath>
 
 #define PI (acos(-1.))
 
@@ -33,7 +34,7 @@ public:
 
     void makeColumn(double dist, int i);
 
-    double rayIntersectionWithSegm (QPointF pos, QPointF dir);
+    double rayIntersectionWithSegm (QPointF pos, QPointF dir, int it);
 private:
     Scene *m_scene = 0;
     QImage buffer;
