@@ -3,6 +3,7 @@
 
 #include <QPointF>
 #include <cmath>
+#include <algorithm>
 
 class SSegment
 {
@@ -15,11 +16,13 @@ public:
 
     double getSize();
 
-    QPointF A() const;
+    QPointF A();
     void setA(const QPointF &value);
 
-    QPointF B() const;
+    QPointF B();
     void setB(const QPointF &value);
+
+    void swapEnds();
 
 private:
     QPointF a,b;

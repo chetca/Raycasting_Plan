@@ -1,9 +1,9 @@
 #include "raycastingpainter.h"
+#include "mygeom.h"
 
-RaycastingPainter::RaycastingPainter(QWidget *parent) : QWidget(parent)
-{
-    m_scene = new Scene();
-
+RaycastingPainter::RaycastingPainter(QWidget *parent) : QWidget(parent){
+    //m_scene = new Scene();
+    //paint (parent, this->player.getPos(),QPointF(100*cos(player.getDir()),100*sin(player.getDir())) );
 }
 
 void RaycastingPainter::paint(QWidget *widget, QPointF position, QPointF direction)
@@ -12,12 +12,12 @@ void RaycastingPainter::paint(QWidget *widget, QPointF position, QPointF directi
     //по возможности передать усилия на другие методы
 
     //Итак, можно сделать буфер. Это даст плавность кадров, но рендеринг будет медленнее
-    if (buffer.size() != widget->size())
-        buffer = QImage(640,400, QImage::Format_ARGB32);
-    castRays(position, direction, width);
+    if (player.getBuffer()->size() != widget->size())
+        player.setBuffer(QImage(WIDTH,HEIGHT, QImage::Format_ARGB32));
+    castRays(position, direction, WIDTH);
 }
 
-Scene *RaycastingPainter::scene() const
+Scene *RaycastingPainter::scene()
 {
     return m_scene;
 }
@@ -35,72 +35,60 @@ double dist(QPointF a, QPointF b)
 void RaycastingPainter::castRays(QPointF position, QPointF direction, double width)
 {
     //Метод описывающий бросание лучей
-    double dist;   //переменная расстояния до препятствия
 
-    QPointF rayStep(
+    QPointF rayStep = QPointF( /** (A,B) ---> (B,-A) **/ // вектор смотрит в право относительно pos & dir => rightViewSide = dir+(rayStep*width/2)
                  (direction-position).y(),
                 -(direction-position).x()
-                );
+                )*1.5/width; //1.5 - половина ширины экрана в 1.5 раз меньше чем длина отрезка [pos,dir]. Формула определения угла обзора
+    // в будущем необходимо вынести этот коэффициент в файл для настроек.
 
-    QPointF side1 = direction + rayStep*width/2;
-    QPointF side2 = direction - rayStep*width/2;
+    double dist;   //переменная расстояния до препятствия
 
-    int it = 0;
+    //new version
 
-    SSegment lim[4];
-             lim[0] = SSegment (QPointF(-1e8, 1e8),QPointF( 1e8, 1e8));
-             lim[1] = SSegment (QPointF(-1e8,-1e8),QPointF( 1e8,-1e8));
-             lim[2] = SSegment (QPointF( 1e8, 1e8),QPointF( 1e8,-1e8));
-             lim[3] = SSegment (QPointF(-1e8, 1e8),QPointF(-1e8,-1e8));
+    QVector <int> seg; //список отрезков попавших в угол обзора
+
+    QPointF leftViewSide  (direction-(rayStep*width/2)),
+            rightViewSide (direction+(rayStep*width/2));
+
+    for (int i=0; i<m_scene->getCnt(); i++) {
+        if (vec(position,leftViewSide,m_scene->getMapSegment(i).A()) <=0 ||
+            vec(position,leftViewSide,m_scene->getMapSegment(i).B()) <=0) {
+
+            if (vec(position,rightViewSide,m_scene->getMapSegment(i).A()) >=0 ||
+                vec(position,rightViewSide,m_scene->getMapSegment(i).B()) <=0) {
+                seg.push_back(i);
+
+                if (getAngleBetweenTwoPt(position,m_scene->getMapSegment(i).A()) <
+                    getAngleBetweenTwoPt(position,m_scene->getMapSegment(i).B()) ) {
+                        m_scene->swapSegmentsEnds(i);
+                }
+            }
+        }
+    }
 
 
+    // sortPoints;
 
+    // casts;
 
+    //old version:
+ /**
     for (int i = 0; i < (int)(width/2);i++){
         //Бросаем по одному лучу на каждый кусочек экрана и переходим на следующий кусочек
         QPointF rayDirect1 (direction + rayStep);
         QPointF rayDirect2 (direction - rayStep);
 
-        dist = rayIntersectionWithSegm(position,rayDirect1,it);
+        dist = rayIntersectionWithSegm(position,rayDirect1);
 
         //... shader
         makeColumn(dist,i);
 
-        dist = rayIntersectionWithSegm(position,rayDirect2,it);
+        dist = rayIntersectionWithSegm(position,rayDirect2);
 
         //... shader
-
     }
-}
-
-double RaycastingPainter::getFov() const
-{
-    return fov;
-}
-
-void RaycastingPainter::setFov(double value)
-{
-    fov = value;
-}
-
-double RaycastingPainter::getWidth() const
-{
-    return width;
-}
-
-void RaycastingPainter::setWidth(double value)
-{
-    width = value;
-}
-
-QImage RaycastingPainter::getBuffer() const
-{
-    return buffer;
-}
-
-void RaycastingPainter::setBuffer(const QImage &value)
-{
-    buffer = value;
+ **/
 }
 
 void RaycastingPainter::makeColumn(double dist, int ii)
@@ -110,24 +98,18 @@ void RaycastingPainter::makeColumn(double dist, int ii)
         h = 0;
     }
 
-    int high = buffer.height();
+    int high = player.getBuffer()->height();
 
     for (int i=0; i<high/2-h/2; i++) {
-        buffer.setPixel(ii,i,12);
+        player.setPixelToBuf(ii,i,12);
         //в дальнейшем Qrgb заменится на текстурку
     }
 
     for (int i=high/2-h/2; i<high/2+h/2; i++) {
-        buffer.setPixel(ii,i,14);
+        player.setPixelToBuf(ii,i,14);
     }
 
     for (int i=high/2+h/2; i<high; i++) {
-        buffer.setPixel(ii,i,15);
+        player.setPixelToBuf(ii,i,15);
     }
-}
-
-
-double RaycastingPainter::rayIntersectionWithSegm(QPointF pos, QPointF dir, int it)
-{
-    return m_scene->targetSegment(pos,dir,it).A().x();
 }

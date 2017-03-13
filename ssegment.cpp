@@ -1,4 +1,5 @@
 #include "ssegment.h"
+#include "mygeom.h"
 
 SSegment::SSegment()
 {
@@ -11,24 +12,6 @@ SSegment::SSegment(QPointF a, QPointF b)
     this->b = b;
 }
 
-inline double vec (QPointF a, QPointF b, QPointF c)
-{
-    return (b.x()-a.x())*(c.y()-b.y()) - (b.y()-a.y())*(c.x()-b.x());
-}
-
-inline double getDist(QPointF a, QPointF b)
-{
-    return sqrt((b.x()-a.x())*(b.x()-a.x()) + (b.y()-a.y())*(b.y()-a.y()));
-}
-
-void ABC (QPointF a, QPointF b, double &A, double &B, double &C)
-{
-    //http://e-maxx.ru/algo/segment_to_line
-    A = a.y() - b.y();
-    B = b.x() - a.x();
-    C = - A * a.x() - B * a.y();
-}
-
 QPointF SSegment::getIntersect(QPointF pos, QPointF dir)
 {
     double vca = vec(pos, dir, a),
@@ -37,27 +20,15 @@ QPointF SSegment::getIntersect(QPointF pos, QPointF dir)
     bool aa = vca>=0 ? 1 : 0;
     bool bb = vcb<=0 ? 1 : 0;
 
-    if (aa && bb) { //положение отрезка относительно луча
-        double a1,b1,c1,
-               a2,b2,c2;
+    if (aa && bb) {
+        QPointF v1=a-b,v2=dir-pos;
+        double y = ((v1.x()*a.y())/v1.y() + a.x() - pos.x()/v2.x() - pos.y()/v2.y())/(v1.x()/v1.y() - v2.x()/v2.y()),
+               x = v1.x()*(y-a.y())/v1.y() + a.x();
 
-        ABC( a , b ,a1,b1,c1);
-        ABC(pos,dir,a2,b2,c2);
-
-        double ABAB = a1*b2 - a2*b1;
-
-        if (ABAB==0) goto LOL; // если детерминант матрицы a1,b1,a2,b2 равен нулю, то точки пересечения нет
-
-        double x = (c1*b2-c2*b1)/ABAB;
-        double y = (a1*c2-a2*c1)/ABAB;
-
-        if ((pos.x() <= x && dir.x() >= x) || (pos.x() >= x && dir.x() <= x)) {
-            if ((pos.y() <= y && dir.y() >= y) || (pos.y() <= y && dir.y() >= y)) {
-
-            }
+        if (getDist(dir,QPointF(x,y)) > getDist(pos, QPointF(x,y))) {
+            goto LOL;
         }
-
-        return QPointF(x, y); // формула Крамера
+        return QPointF(x,y);
     }
     else {
 LOL:        return QPointF(1e9,1e9);
@@ -69,7 +40,7 @@ double SSegment::getSize()
     return getDist(a,b);
 }
 
-QPointF SSegment::A() const
+QPointF SSegment::A()
 {
     return a;
 }
@@ -79,7 +50,7 @@ void SSegment::setA(const QPointF &value)
     a = value;
 }
 
-QPointF SSegment::B() const
+QPointF SSegment::B()
 {
     return b;
 }
@@ -87,4 +58,11 @@ QPointF SSegment::B() const
 void SSegment::setB(const QPointF &value)
 {
     b = value;
+}
+
+void SSegment::swapEnds()
+{
+    QPointF c = a;
+    a = b;
+    b = c;
 }

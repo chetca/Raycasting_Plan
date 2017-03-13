@@ -27,11 +27,17 @@ SOURCES += main.cpp\
         mainwidget.cpp \
     raycastingpainter.cpp \
     scene.cpp \
-    ssegment.cpp
+    ssegment.cpp \
+    player.cpp \
+    mygeom.cpp \
+    mpointf.cpp
 
 HEADERS  += mainwidget.h \
     raycastingpainter.h \
     scene.h \
-    ssegment.h
+    ssegment.h \
+    player.h \
+    mygeom.h \
+    mpointf.h
 
 FORMS    += mainwidget.ui

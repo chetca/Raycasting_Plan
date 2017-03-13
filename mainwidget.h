@@ -16,6 +16,7 @@ public:
     explicit mainwidget(QWidget *parent = 0);
     ~mainwidget();
 
+
 private:
     Ui::mainwidget *ui;
 

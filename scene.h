@@ -5,7 +5,7 @@
 
 #include <QPointF>
 #include <QVector>
-#include <cmath>
+#include <QtMath>
 //#include <boost/geometry.hpp>
 
 class Scene
@@ -15,11 +15,17 @@ public:
 
     Scene();
 
-    SSegment targetSegment(QPointF position, QPointF direction, int it);
+    QVector<SSegment> getMapSegment();
+    SSegment getMapSegment(int i);
+    void setMapSegment(const QVector<SSegment> &value);
+
+    int getCnt();
+    void setCnt(int value);
+    void swapSegmentsEnds(int i);
 
 private:
     QVector<SSegment> mapSegment;
-    QPointF pos, dir;
+    int cnt;
 };
 
 #endif // SCENE_H

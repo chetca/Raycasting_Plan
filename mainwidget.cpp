@@ -9,8 +9,9 @@ mainwidget::mainwidget(QWidget *parent) :
 
     RP = new RaycastingPainter(this);
 
+    this->setGeometry(0,0,RP->WIDTH,RP->HEIGHT);
 
-    RP->setGeometry(10,10,640,480);
+    RP->setGeometry(10,10,RP->WIDTH,RP->HEIGHT);
     RP->show();
 }
 
