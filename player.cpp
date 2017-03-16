@@ -3,7 +3,8 @@
 Player::Player(QObject *parent) : QObject(parent)
 {
     buffer = new QImage(800, 600, QImage::Format_ARGB32);
-
+    pos = QPointF(0,0);
+    dir = 0;
 }
 
 QPointF Player::getPos() const

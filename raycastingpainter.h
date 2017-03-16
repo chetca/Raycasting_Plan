@@ -9,6 +9,7 @@
 #include <QtMath>
 #include <QVector>
 #include <algorithm>
+#include <utility>
 
 class RaycastingPainter:public QWidget
 {
@@ -22,7 +23,7 @@ public:
 
     Scene *scene();
     void setScene(Scene *scene);
-    void castRays(QPointF position, QPointF direction, double width);
+    void castRays(QPointF position, QPointF direction, int width);
 
     double getWidth() const;
     void setWidth(double value);
@@ -39,7 +40,7 @@ private:
     Scene *m_scene = 0;
     //QImage buffer;
     //double fov; //Угол обзора
-    Player player;
+public: Player *player;
 };
 
 #endif // RAYCASTINGPAINTER_H

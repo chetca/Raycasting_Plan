@@ -1,6 +1,8 @@
 #include "mainwidget.h"
 #include "ui_mainwidget.h"
 
+#include <QLabel>
+
 mainwidget::mainwidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::mainwidget)
@@ -13,6 +15,9 @@ mainwidget::mainwidget(QWidget *parent) :
 
     RP->setGeometry(10,10,RP->WIDTH,RP->HEIGHT);
     RP->show();
+    plScreen = new QImage (*(RP->player->getBuffer()));
+    QLabel *sc = new QLabel(this);
+
 }
 
 mainwidget::~mainwidget()

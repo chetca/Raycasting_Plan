@@ -2,8 +2,9 @@
 #include "mygeom.h"
 
 RaycastingPainter::RaycastingPainter(QWidget *parent) : QWidget(parent){
-    //m_scene = new Scene();
+    m_scene = new Scene();
     //paint (parent, this->player.getPos(),QPointF(100*cos(player.getDir()),100*sin(player.getDir())) );
+    player = new Player(this);
 }
 
 void RaycastingPainter::paint(QWidget *widget, QPointF position, QPointF direction)
@@ -12,8 +13,8 @@ void RaycastingPainter::paint(QWidget *widget, QPointF position, QPointF directi
     //по возможности передать усилия на другие методы
 
     //Итак, можно сделать буфер. Это даст плавность кадров, но рендеринг будет медленнее
-    if (player.getBuffer()->size() != widget->size())
-        player.setBuffer(QImage(WIDTH,HEIGHT, QImage::Format_ARGB32));
+    if (player->getBuffer()->size() != widget->size())
+        player->setBuffer(QImage(WIDTH,HEIGHT, QImage::Format_ARGB32));
     castRays(position, direction, WIDTH);
 }
 
@@ -32,7 +33,7 @@ double dist(QPointF a, QPointF b)
     return sqrt((b.x()-a.x())*(b.x()-a.x()) + (b.y()-a.y())*(b.y()-a.y()));
 }
 
-void RaycastingPainter::castRays(QPointF position, QPointF direction, double width)
+void RaycastingPainter::castRays(QPointF position, QPointF direction, int width)
 {
     //Метод описывающий бросание лучей
 
@@ -58,15 +59,27 @@ void RaycastingPainter::castRays(QPointF position, QPointF direction, double wid
             if (vec(position,rightViewSide,m_scene->getMapSegment(i).A()) >=0 ||
                 vec(position,rightViewSide,m_scene->getMapSegment(i).B()) <=0) {
                 seg.push_back(i);
-
-                if (getAngleBetweenTwoPt(position,m_scene->getMapSegment(i).A()) <
-                    getAngleBetweenTwoPt(position,m_scene->getMapSegment(i).B()) ) {
-                        m_scene->swapSegmentsEnds(i);
-                }
             }
         }
     }
 
+    int segmentsInViewSize = seg.size();
+
+    for (int i=0; i<width/2; i++) {
+        QPointF rayDirect1 (direction + rayStep*i);
+
+        for (int j=0; j<segmentsInViewSize; j++) {
+            dist = std::min(dist, rayIntersect (position,rayDirect1,m_scene->getMapSegment(seg[j]) ));
+        }
+        makeColumn(dist,i);
+
+        QPointF rayDirect2 (direction - rayStep*(i+1));
+
+        for (int j=0; j<segmentsInViewSize; j++) {
+            dist = std::min(dist, rayIntersect (position,rayDirect2,m_scene->getMapSegment(seg[j]) ));
+        }
+        makeColumn(dist,i);
+    }
 
     // sortPoints;
 
@@ -98,18 +111,18 @@ void RaycastingPainter::makeColumn(double dist, int ii)
         h = 0;
     }
 
-    int high = player.getBuffer()->height();
+    int high = player->getBuffer()->height();
 
     for (int i=0; i<high/2-h/2; i++) {
-        player.setPixelToBuf(ii,i,12);
+        player->setPixelToBuf(ii,i,12);
         //в дальнейшем Qrgb заменится на текстурку
     }
 
     for (int i=high/2-h/2; i<high/2+h/2; i++) {
-        player.setPixelToBuf(ii,i,14);
+        player->setPixelToBuf(ii,i,14);
     }
 
     for (int i=high/2+h/2; i<high; i++) {
-        player.setPixelToBuf(ii,i,15);
+        player->setPixelToBuf(ii,i,15);
     }
 }

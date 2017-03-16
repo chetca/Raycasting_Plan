@@ -33,7 +33,6 @@ private:
     QPointF pos;
     QImage *buffer;
 
-
 };
 
 #endif // PLAYER_H

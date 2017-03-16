@@ -21,6 +21,7 @@ private:
     Ui::mainwidget *ui;
 
     RaycastingPainter *RP;
+    QImage *plScreen;
 };
 
 #endif // MAINWIDGET_H
