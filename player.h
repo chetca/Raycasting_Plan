@@ -18,21 +18,15 @@ public:
     double getDir() const;
     void setDir(double value);
 
-    QImage *getBuffer() const;
-    void setBuffer(QImage value);
-
-    void setPixelToBuf(int x, int y, int color);
-
 signals:
 
 public slots:
-    //void keyEvent (QKeyEvent *event);
 
 private:
+    int WIDTH = 800;
+    int HEIGHT = 600;
     double dir;
     QPointF pos;
-    QImage *buffer;
-
 };
 
 #endif // PLAYER_H

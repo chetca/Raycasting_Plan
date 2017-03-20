@@ -10,6 +10,7 @@
 #include <QVector>
 #include <algorithm>
 #include <utility>
+#include <QPaintEvent>
 
 class RaycastingPainter:public QWidget
 {
@@ -28,9 +29,6 @@ public:
     double getWidth() const;
     void setWidth(double value);
 
-    QImage getBuffer() const;
-    void setBuffer(const QImage &value);
-
     void makeColumn(double dist, int i);
 
     int WIDTH = 800;
@@ -38,9 +36,11 @@ public:
 
 private:
     Scene *m_scene = 0;
-    //QImage buffer;
-    //double fov; //Угол обзора
+    QImage rbuffer;
+
 public: Player *player;
+    QImage getRbuffer() const;
+    void setRbuffer(const QImage &value);
 };
 
 #endif // RAYCASTINGPAINTER_H

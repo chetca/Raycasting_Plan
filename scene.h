@@ -6,6 +6,8 @@
 #include <QPointF>
 #include <QVector>
 #include <QtMath>
+#include <QRectF>
+
 //#include <boost/geometry.hpp>
 
 class Scene
@@ -25,6 +27,7 @@ public:
 
 private:
     QVector<SSegment> mapSegment;
+
     int cnt;
 };
 

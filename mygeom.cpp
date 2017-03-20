@@ -1,5 +1,7 @@
 #include "mygeom.h"
 
+#include <QDebug>
+
 double vec              ( QPointF a,  QPointF b,  QPointF c)  {return (b.x()-a.x())*(c.y()-b.y()) - (b.y()-a.y())*(c.x()-b.x());}
 double getDist          ( QPointF a,  QPointF b)                    {return sqrt((b.x()-a.x())*(b.x()-a.x()) + (b.y()-a.y())*(b.y()-a.y()));}
 double getSquaredDist   ( QPointF a,  QPointF b)                    {return     ((b.x()-a.x())*(b.x()-a.x()) + (b.y()-a.y())*(b.y()-a.y()));}
@@ -46,7 +48,7 @@ QPointF getIntersectionOfLines (QPointF a, QPointF b, QPointF c, QPointF d)
 
 double rayIntersect( QPointF a,  QPointF b,  SSegment ss)
 {
-    QPointF inter;
+    QPointF inter (1e9,1e9);
 
     if ((vec(a,b,ss.A()) < 0 && vec(a,b,ss.B()) > 0)) {
         if (vec(ss.A(),ss.B(),a) > 0) {

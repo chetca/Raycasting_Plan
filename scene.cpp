@@ -1,9 +1,14 @@
 #include "scene.h"
 
+#include <QDebug>
+
 Scene::Scene()
 {
-    mapSegment.push_back(SSegment(QPointF(10,0),QPointF(10,10)));
-    mapSegment.push_back(SSegment(QPointF(10,10),QPointF(0,10)));
+
+    mapSegment.push_back(SSegment(QPointF(-10,10),QPointF(100,10)));
+    mapSegment.push_back(SSegment(QPointF(-10,-10),QPointF(100,-10)));
+
+    setCnt(4);
 }
 
 QVector<SSegment> Scene::getMapSegment()
@@ -13,7 +18,11 @@ QVector<SSegment> Scene::getMapSegment()
 
 SSegment Scene::getMapSegment(int i)
 {
-    return mapSegment[i];
+    if (i>=0 && i<mapSegment.size()) {
+        return mapSegment[i];
+    }
+
+    qDebug() << "mapSegment [" << i << "] doesn't exist, motherfacka !!!!";
 }
 
 void Scene::setMapSegment(const QVector<SSegment> &value)
@@ -33,5 +42,8 @@ void Scene::setCnt(int value)
 
 void Scene::swapSegmentsEnds(int i)
 {
+    if (i>=mapSegment.size()) {
+        return;
+    }
     mapSegment[i].swapEnds();
 }

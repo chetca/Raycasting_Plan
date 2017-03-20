@@ -26,6 +26,7 @@ public:
 
 private:
     QPointF a,b;
+    int texture;
 };
 
 #endif // SSEGMENT_H

@@ -2,6 +2,8 @@
 #define MAINWIDGET_H
 
 #include <QWidget>
+#include <QPainter>
+
 #include "raycastingpainter.h"
 
 namespace Ui {
@@ -16,12 +18,14 @@ public:
     explicit mainwidget(QWidget *parent = 0);
     ~mainwidget();
 
+    void paintEvent(QPaintEvent *);
 
 private:
     Ui::mainwidget *ui;
 
     RaycastingPainter *RP;
     QImage *plScreen;
+    QRectF *targetP;
 };
 
 #endif // MAINWIDGET_H

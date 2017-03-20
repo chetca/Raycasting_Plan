@@ -10,6 +10,7 @@ SSegment::SSegment(QPointF a, QPointF b)
 {
     this->a = a;
     this->b = b;
+    texture = 0;
 }
 
 QPointF SSegment::getIntersect(QPointF pos, QPointF dir)

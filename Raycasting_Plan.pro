@@ -39,3 +39,6 @@ HEADERS  += mainwidget.h \
     mygeom.h
 
 FORMS    += mainwidget.ui
+
+RESOURCES += \
+    textures/walls/textures.qrc
