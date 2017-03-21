@@ -5,8 +5,12 @@
 Scene::Scene()
 {
 
-    mapSegment.push_back(SSegment(QPointF(-10,10),QPointF(100,10)));
-    mapSegment.push_back(SSegment(QPointF(-10,-10),QPointF(100,-10)));
+    mapSegment.push_back(SSegment(QPointF(-10,10),QPointF(100,10),1));
+    mapSegment.push_back(SSegment(QPointF(-10,-10),QPointF(100,-10),0));
+
+//    mapSegment.push_back(SSegment(QPointF(0,12),QPointF(20,-10),0));
+//    mapSegment.push_back(SSegment(QPointF(15,0),QPointF(15,-10),1));
+    mapSegment.push_back(SSegment(QPointF(10.5,5),QPointF(10,-0.6)));
 
     setCnt(4);
 }

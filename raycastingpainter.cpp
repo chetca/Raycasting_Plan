@@ -11,6 +11,8 @@ RaycastingPainter::RaycastingPainter(QWidget *parent) : QWidget(parent){
 
     rbuffer = QImage(800, 600, QImage::Format_ARGB32);
 
+    textures.push_back(QImage(":/wall1.jpg"));
+    textures.push_back(QImage(":/wall2.jpg"));
 }
 
 void RaycastingPainter::paint(QWidget *widget, QPointF position, QPointF direction)
@@ -51,7 +53,7 @@ void RaycastingPainter::castRays(QPointF position, QPointF direction, int width)
                 )*1.5/width; //1.5 - половина ширины экрана в 1.5 раз меньше чем длина отрезка [pos,dir]. Формула определения угла обзора
     // в будущем необходимо вынести этот коэффициент в файл для настроек.
 
-    double dist = 1e9;   //переменная расстояния до препятствия
+    double dist = INF;   //переменная расстояния до препятствия
 
     QVector <int> seg; //список отрезков попавших в угол обзора
 
@@ -69,39 +71,59 @@ void RaycastingPainter::castRays(QPointF position, QPointF direction, int width)
         }
     }
 
-    qDebug() << seg;
-
     int segmentsInViewSize = seg.size();
 
     for (int i=0; i<width/2; i++) {
         QPointF rayDirect1 (direction - rayStep*i);
 
+        QPointF intersectPt(INF,INF), tempPt(INF,INF);
+
+        int texture_id=-1;
+
+        double columnWidthId=0;
+
         for (int j=0; j<segmentsInViewSize; j++) {
-            dist = std::min(dist, rayIntersect (position,rayDirect1,m_scene->getMapSegment(seg[j]) ));
+            intersectPt = rayIntersect (position,rayDirect1,m_scene->getMapSegment(seg[j]) );
+            double dst = getDist(intersectPt,position);
+            if (intersectPt.x()>=INF) dst = INF;
+            if (dist > dst) {
+                texture_id = m_scene->getMapSegment(seg[j]).getTexture();
+                columnWidthId = getDist(intersectPt,m_scene->getMapSegment(seg[j]).A());
+                dist = dst;
+            }
         }
 
         double k1 = getDist(QPointF(0,0),rayStep*i),
                k2 = getDist(position, direction),
                gg = sqrt(k1*k1 + k2*k2);
 
-        makeColumn(dist*(k2/gg),width/2-i-1);
-        dist = 1e9;
+        makeColumn(dist*(k2/gg),width/2-i-1, texture_id, columnWidthId);
+        dist = INF;
 
+        columnWidthId = 0;
+        texture_id = -1;
         QPointF rayDirect2 (direction + rayStep*(i+1));
 
         for (int j=0; j<segmentsInViewSize; j++) {
-            dist = std::min(dist, rayIntersect (position,rayDirect2,m_scene->getMapSegment(seg[j])));
+            intersectPt = rayIntersect (position,rayDirect2,m_scene->getMapSegment(seg[j]));
+            double dst = getDist(intersectPt,position);
+            if (intersectPt.x()>=INF) dst = INF;
+            if (dist > dst) {
+                texture_id = m_scene->getMapSegment(seg[j]).getTexture();
+                columnWidthId = getDist(intersectPt,m_scene->getMapSegment(seg[j]).A());
+                dist = dst;
+            }
         }
-        makeColumn(dist*(k2/gg),i+width/2);
+        makeColumn(dist*(k2/gg),i+width/2, texture_id, columnWidthId);
 
-        dist = 1e9;
+        dist = INF;
     }
 }
 
-void RaycastingPainter::makeColumn(double dist, int ii)
+void RaycastingPainter::makeColumn(double dist, int ii, int texture, double e)
 {
     int h = round(2000./dist);
-    if (dist == 1e9) {
+    if (dist == INF) {
         h = 0;
     }
 
@@ -116,8 +138,17 @@ void RaycastingPainter::makeColumn(double dist, int ii)
         //в дальнейшем Qrgb заменится на текстурку
     }
 
-    for (int i=HEIGHT/2-h/2; i<HEIGHT/2+h/2; i++) {
-        rbuffer.setPixel(ii,i,wwall);
+
+    if (texture >= 0) {
+        int wdth = textures[texture].width();
+        int hght = textures[texture].height();
+
+        QImage texturedColumn = textures[texture].scaled(wdth*h/hght,h);
+        e = int(round(e*texturedColumn.width()/5))%texturedColumn.width();
+        int wallBeg = (HEIGHT/2-h/2);
+        for (int i=wallBeg; i<HEIGHT/2+h/2; i++) {
+            rbuffer.setPixel(ii,i,texturedColumn.pixel(e,i-wallBeg));
+        }
     }
 
     for (int i=HEIGHT/2+h/2; i<HEIGHT; i++) {

@@ -9,10 +9,7 @@ class SSegment
 {
 public:
     SSegment();
-    SSegment(QPointF a, QPointF b);
-
-    //точка пересечения лучей отрезка
-    QPointF getIntersect(QPointF pos, QPointF dir);
+    SSegment(QPointF a, QPointF b, int tx=0);
 
     double getSize();
 
@@ -23,6 +20,9 @@ public:
     void setB(const QPointF &value);
 
     void swapEnds();
+
+    int getTexture() const;
+    void setTexture(int value);
 
 private:
     QPointF a,b;

@@ -46,7 +46,7 @@ QPointF getIntersectionOfLines (QPointF a, QPointF b, QPointF c, QPointF d)
     return QPointF(x,y);
 }
 
-double rayIntersect( QPointF a,  QPointF b,  SSegment ss)
+QPointF rayIntersect( QPointF a,  QPointF b,  SSegment ss)
 {
     QPointF inter (1e9,1e9);
 
@@ -61,11 +61,7 @@ double rayIntersect( QPointF a,  QPointF b,  SSegment ss)
         }
     }
 
-    //
-    if (inter.x()!=INF) {
-        return getDist(inter,a);
-    }
-    //
+    if (inter.x()!=INF) {return inter;}
 
-    return INF;
+    return QPointF(INF,INF);
 }

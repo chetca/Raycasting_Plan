@@ -29,7 +29,7 @@ public:
     double getWidth() const;
     void setWidth(double value);
 
-    void makeColumn(double dist, int i);
+    void makeColumn(double dist, int i, int texture, double e);
 
     int WIDTH = 800;
     int HEIGHT = 600;
@@ -37,6 +37,7 @@ public:
 private:
     Scene *m_scene = 0;
     QImage rbuffer;
+    QVector <QImage> textures;
 
 public: Player *player;
     QImage getRbuffer() const;

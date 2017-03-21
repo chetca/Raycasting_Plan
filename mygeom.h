@@ -8,7 +8,7 @@
 #include "ssegment.h"
 
 #define PI (acos(-1.))
-#define INF 1e8
+#define INF 1e9
 
 double vec                      ( QPointF a,  QPointF b,  QPointF c);
 
@@ -22,7 +22,7 @@ double getAngleBetween3Pts      (const QPointF &a, const QPointF &b, const QPoin
 
 QPointF getIntersectionOfLines  (QPointF a, QPointF b, QPointF c, QPointF d);
 
-double rayIntersect             (QPointF a, QPointF b, SSegment ss);
+QPointF rayIntersect            (QPointF a, QPointF b, SSegment ss);
 
 #endif // MYGEOM
 
