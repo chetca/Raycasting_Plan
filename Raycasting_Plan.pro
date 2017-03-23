@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui widgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -29,16 +29,21 @@ SOURCES += main.cpp\
     scene.cpp \
     ssegment.cpp \
     player.cpp \
-    mygeom.cpp
+    mygeom.cpp \
+    gamescreen.cpp
 
 HEADERS  += mainwidget.h \
     raycastingpainter.h \
     scene.h \
     ssegment.h \
     player.h \
-    mygeom.h
+    mygeom.h \
+    gamescreen.h
 
 FORMS    += mainwidget.ui
 
 RESOURCES += \
     textures/walls/textures.qrc
+
+DISTFILES += \
+    testlevel.map

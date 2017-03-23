@@ -5,6 +5,7 @@
 #include <QPointF>
 #include <QImage>
 #include <QKeyEvent>
+#include <QEvent>
 
 class Player : public QObject
 {

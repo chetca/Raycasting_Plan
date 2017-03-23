@@ -15,14 +15,18 @@ mainwidget::mainwidget(QWidget *parent) :
     this->setGeometry(0,0,RP->WIDTH,RP->HEIGHT);
 
     RP->setGeometry(10,10,RP->WIDTH,RP->HEIGHT);
-    RP->paint(this, RP->player->getPos(), QPointF(5,0));
+    RP->paint(RP->player->getPos(), QPointF(5,0));
     RP->show();
 
-    targetP = new QRectF(0,0,800,600);
+    ticker.start(1, this);
 
-//    plScreen = new QImage (*(RP->player->getBuffer()));
-//    QLabel *sc = new QLabel(this);
+    //connect(this, SIGNAL(keyPressed(QKeyEvent *)), RP, SLOT(keyPressEvent(QKeyEvent *)));
 
+    setAttribute(Qt::WA_OpaquePaintEvent, true);
+    setMouseTracking(1);
+
+    //gameScreen = new GameScreen(RP->getRbuffer(), this);
+    //gameScreen->setGeometry(0,0,800,600);
 }
 
 mainwidget::~mainwidget()
@@ -30,11 +34,35 @@ mainwidget::~mainwidget()
     delete ui;
 }
 
-void mainwidget::paintEvent(QPaintEvent *)
+void mainwidget::paintEvent(QPaintEvent *event)
 {
     static int stt;
     qDebug() << "paintEvent started :" << stt++;
     QPainter painter(this);
-    QPointF tP(0,0);
-    painter.drawImage(tP,(RP->getRbuffer()));
+    painter.setCompositionMode(QPainter::CompositionMode_Source);
+    painter.drawImage(event->rect(),(RP->getRbuffer()), event->rect());
+}
+
+//void mainwidget::keyPressEvent(QKeyEvent *event)
+//{
+//    QPointF dir (10*cos(RP->player->getDir()),10*sin(RP->player->getDir()));
+//    QPaintEvent *a = new QPaintEvent(QRect(0,0,800,600));
+
+//    emit(keyPressed(event));
+//}
+
+
+
+
+void mainwidget::timerEvent(QTimerEvent *) {
+    RP->player->setDir(RP->player->getDir()-(QCursor::pos().x()-screenCentre.x()));
+    //gameScreen->setImg(RP->getRbuffer());
+    QCursor::setPos(screenCentre);
+    this->update();
+}
+
+void mainwidget::update()
+{
+    QPaintEvent aa = QPaintEvent(QRect());
+    //gameScreen->paintEvent(&aa);
 }

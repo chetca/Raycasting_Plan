@@ -1,9 +1,12 @@
 #include "player.h"
 
+#include <QDebug>
+
 Player::Player(QObject *parent) : QObject(parent)
 {    
     pos = QPointF(0,0);
     dir = 0;
+
 }
 
 QPointF Player::getPos() const

@@ -20,7 +20,7 @@ public:
 
     explicit RaycastingPainter(QWidget *parent=0);
 
-    void paint(QWidget *widget, QPointF position, QPointF direction);
+    void paint(QPointF position, QPointF direction);
 
     Scene *scene();
     void setScene(Scene *scene);
@@ -34,13 +34,16 @@ public:
     int WIDTH = 800;
     int HEIGHT = 600;
 
+public slots:
+
+
 private:
     Scene *m_scene = 0;
     QImage rbuffer;
     QVector <QImage> textures;
 
 public: Player *player;
-    QImage getRbuffer() const;
+    QImage getRbuffer();
     void setRbuffer(const QImage &value);
 };
 

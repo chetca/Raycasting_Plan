@@ -13,17 +13,11 @@ RaycastingPainter::RaycastingPainter(QWidget *parent) : QWidget(parent){
 
     textures.push_back(QImage(":/wall1.jpg"));
     textures.push_back(QImage(":/wall2.jpg"));
+    textures.push_back(QImage(":/doors2.jpg"));
 }
 
-void RaycastingPainter::paint(QWidget *widget, QPointF position, QPointF direction)
+void RaycastingPainter::paint(QPointF position, QPointF direction)
 {
-    //описать алгоритм как бросать луч
-    //по возможности передать усилия на другие методы
-
-    //Итак, можно сделать буфер. Это даст плавность кадров, но рендеринг будет медленнее
-
-
-//    widget->paintEvent(QPaintEvent(QRect(0,0,0,0)));
 
     castRays(position, direction, WIDTH);
 }
@@ -118,19 +112,21 @@ void RaycastingPainter::castRays(QPointF position, QPointF direction, int width)
 
         dist = INF;
     }
+
+    this->update();
 }
 
 void RaycastingPainter::makeColumn(double dist, int ii, int texture, double e)
 {
-    int h = round(2000./dist);
+    int h = round(10000./dist);
     if (dist == INF) {
         h = 0;
     }
 
     h = std::min(h,HEIGHT);
 
-    QRgb cceil  = qRgb(50,50,50),
-         ffloor = qRgb(100,50,100),
+    QRgb cceil  = qRgb(133, 133, 133),
+         ffloor = qRgb(227, 227, 255),
          wwall   = qRgb(150,150,0);
 
     for (int i=0; i<HEIGHT/2-h/2; i++) {
@@ -156,7 +152,7 @@ void RaycastingPainter::makeColumn(double dist, int ii, int texture, double e)
     }
 }
 
-QImage RaycastingPainter::getRbuffer() const
+QImage RaycastingPainter::getRbuffer()
 {
     return rbuffer;
 }

@@ -1,18 +1,42 @@
 #include "scene.h"
 
 #include <QDebug>
+#include <QFile>
+#include <sstream>
+#include <algorithm>
 
 Scene::Scene()
 {
+    QFile mapTxt("/Users/dugar/Desktop/Raycasting_Plan-test/testlevel.map");
 
-    mapSegment.push_back(SSegment(QPointF(-10,10),QPointF(100,10),1));
-    mapSegment.push_back(SSegment(QPointF(-10,-10),QPointF(100,-10),0));
+    if (!mapTxt.open(QIODevice::ReadOnly)) {qDebug() << "file can't be opened";}
+    else {qDebug() << "successfull opening file !";}
+    bool FF=0;
+    while (!mapTxt.atEnd()) {
+        QByteArray l = mapTxt.readLine();
+        std::stringstream ss;
+        ss << l.toStdString();
+        std::string g;
+        double x,y;
 
-//    mapSegment.push_back(SSegment(QPointF(0,12),QPointF(20,-10),0));
-//    mapSegment.push_back(SSegment(QPointF(15,0),QPointF(15,-10),1));
-    mapSegment.push_back(SSegment(QPointF(10.5,5),QPointF(10,-0.6)));
+        if (!FF) {if (ss>>x>>y) {FF=1;}}
 
-    setCnt(4);
+        if (FF) {
+            double x1,y1,x2,y2,t;
+            ss >> x1 >> y1 >> x2 >> y2 >> t;
+            mapSegment.push_back(SSegment(QPointF(x1,y1),QPointF(x2,y2),t));
+        }
+    }
+
+//    mapSegment.push_back(SSegment(QPointF(-10,10),QPointF(100,10),1));
+//    mapSegment.push_back(SSegment(QPointF(-10,-10),QPointF(100,-10),2));
+
+////    mapSegment.push_back(SSegment(QPointF(0,12),QPointF(20,-10),0));
+////    mapSegment.push_back(SSegment(QPointF(15,0),QPointF(15,-10),1));
+//    mapSegment.push_back(SSegment(QPointF(10.5,5),QPointF(10,-0.6)));
+
+//    setCnt(4);
+
 }
 
 QVector<SSegment> Scene::getMapSegment()

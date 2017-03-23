@@ -1,3 +1,4 @@
+//#include "controlmodule.h"
 #include "mainwidget.h"
 #include <QApplication>
 
