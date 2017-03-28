@@ -3,6 +3,7 @@
 
 #include "scene.h"
 #include "player.h"
+#include "mygeom.h"
 
 #include <QWidget>
 #include <QPointF>
@@ -20,7 +21,7 @@ public:
 
     explicit RaycastingPainter(QWidget *parent=0);
 
-    void paint(QPointF position, QPointF direction);
+    void paint();
 
     Scene *scene();
     void setScene(Scene *scene);
@@ -30,12 +31,6 @@ public:
     void setWidth(double value);
 
     void makeColumn(double dist, int i, int texture, double e);
-
-    int WIDTH = 800;
-    int HEIGHT = 600;
-
-public slots:
-
 
 private:
     Scene *m_scene = 0;

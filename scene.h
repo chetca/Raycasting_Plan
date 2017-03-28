@@ -28,6 +28,8 @@ public:
 private:
     QVector<SSegment> mapSegment;
 
+public:
+    QPointF ps;
     int cnt;
 };
 

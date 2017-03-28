@@ -12,21 +12,19 @@ mainwidget::mainwidget(QWidget *parent) :
 
     RP = new RaycastingPainter(this);
 
-    this->setGeometry(0,0,RP->WIDTH,RP->HEIGHT);
+    this->setGeometry(0, 0, WIDTH, HEIGHT);
 
-    RP->setGeometry(10,10,RP->WIDTH,RP->HEIGHT);
-    RP->paint(RP->player->getPos(), QPointF(5,0));
+    RP->setGeometry(0, 0, WIDTH, HEIGHT);
+    RP->paint();
     RP->show();
 
-    ticker.start(1, this);
-
-    //connect(this, SIGNAL(keyPressed(QKeyEvent *)), RP, SLOT(keyPressEvent(QKeyEvent *)));
+    ticker.start(10, this);
+    watch.start();
 
     setAttribute(Qt::WA_OpaquePaintEvent, true);
     setMouseTracking(1);
 
-    //gameScreen = new GameScreen(RP->getRbuffer(), this);
-    //gameScreen->setGeometry(0,0,800,600);
+    plScreen = new QImage (WIDTH, HEIGHT, QImage::Format_ARGB32);
 }
 
 mainwidget::~mainwidget()
@@ -36,33 +34,47 @@ mainwidget::~mainwidget()
 
 void mainwidget::paintEvent(QPaintEvent *event)
 {
-    static int stt;
-    qDebug() << "paintEvent started :" << stt++;
     QPainter painter(this);
     painter.setCompositionMode(QPainter::CompositionMode_Source);
-    painter.drawImage(event->rect(),(RP->getRbuffer()), event->rect());
+    painter.drawImage(event->rect(), *plScreen, event->rect());
 }
 
-//void mainwidget::keyPressEvent(QKeyEvent *event)
-//{
-//    QPointF dir (10*cos(RP->player->getDir()),10*sin(RP->player->getDir()));
-//    QPaintEvent *a = new QPaintEvent(QRect(0,0,800,600));
+void mainwidget::keyPressEvent(QKeyEvent *event)
+{    
+    event->accept();
+    qDebug() << event;
+    if (event->key() == Qt::Key_W) {
+        RP->player->setDX(cos(RP->player->getDir())*0.001);
+        RP->player->setDY(sin(RP->player->getDir())*0.001);
+    }
 
-//    emit(keyPressed(event));
-//}
+    if (event->key() == Qt::Key_S) {
+        RP->player->setDX(-cos(RP->player->getDir())*0.001);
+        RP->player->setDY(-sin(RP->player->getDir())*0.001);
 
+    }
 
+    if (event->key() == Qt::Key_D) {
+        RP->player->setDX(sin(RP->player->getDir())*0.001);
+        RP->player->setDY(-cos(RP->player->getDir())*0.001);
+    }
 
+    if (event->key() == Qt::Key_A) {
+        RP->player->setDX(-sin(RP->player->getDir())*0.001);
+        RP->player->setDY(cos(RP->player->getDir())*0.001);
+    }
+    //emit(keyPressed(event));
+}
 
 void mainwidget::timerEvent(QTimerEvent *) {
-    RP->player->setDir(RP->player->getDir()-(QCursor::pos().x()-screenCentre.x()));
-    //gameScreen->setImg(RP->getRbuffer());
+    double time = watch.elapsed();
+    //watch.start();
+    RP->player->setDDIR((QCursor::pos().x()-screenCentre.x()) * (-0.000001));
     QCursor::setPos(screenCentre);
-    this->update();
-}
+    RP->paint();
 
-void mainwidget::update()
-{
-    QPaintEvent aa = QPaintEvent(QRect());
-    //gameScreen->paintEvent(&aa);
+    *plScreen = RP->getRbuffer();
+    RP->player->update(time);
+
+    //this->update();
 }

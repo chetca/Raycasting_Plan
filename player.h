@@ -7,6 +7,8 @@
 #include <QKeyEvent>
 #include <QEvent>
 
+#include "mygeom.h"
+
 class Player : public QObject
 {
     Q_OBJECT
@@ -18,15 +20,22 @@ public:
 
     double getDir() const;
     void setDir(double value);
+    void update(double time);
+
+    QPointF getPtDir();
+
+    void setDX(double r);
+    void setDY(double r);
+
+    void setDDIR(double r);
 
 signals:
 
 public slots:
 
 private:
-    int WIDTH = 800;
-    int HEIGHT = 600;
     double dir;
+    double dx,dy, ddir;
     QPointF pos;
 };
 

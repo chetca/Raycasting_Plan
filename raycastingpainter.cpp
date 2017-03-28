@@ -1,40 +1,26 @@
 #include "raycastingpainter.h"
-#include "mygeom.h"
 
 #include <QDebug>
 #include <deque>
 
-RaycastingPainter::RaycastingPainter(QWidget *parent) : QWidget(parent){
+RaycastingPainter::RaycastingPainter(QWidget *parent) : QWidget(parent) {
     m_scene = new Scene();
-    //paint (parent, this->player.getPos(),QPointF(100*cos(player.getDir()),100*sin(player.getDir())) );
     player = new Player(this);
+    player->setPos(m_scene->ps);
 
-    rbuffer = QImage(800, 600, QImage::Format_ARGB32);
+    rbuffer = QImage(WIDTH, HEIGHT, QImage::Format_ARGB32);
 
-    textures.push_back(QImage(":/wall1.jpg"));
-    textures.push_back(QImage(":/wall2.jpg"));
+    textures.push_back(QImage(":/wall1.jpg" ));
+    textures.push_back(QImage(":/wall2.jpg" ));
     textures.push_back(QImage(":/doors2.jpg"));
+
+    this->grabKeyboard();
 }
 
-void RaycastingPainter::paint(QPointF position, QPointF direction)
+void RaycastingPainter::paint()
 {
-
-    castRays(position, direction, WIDTH);
-}
-
-Scene *RaycastingPainter::scene()
-{
-    return m_scene;
-}
-
-void RaycastingPainter::setScene(Scene *scene)
-{
-    m_scene = scene;
-}
-
-double dist(QPointF a, QPointF b)
-{
-    return sqrt((b.x()-a.x())*(b.x()-a.x()) + (b.y()-a.y())*(b.y()-a.y()));
+    castRays(player->getPos(), player->getPtDir(), WIDTH);
+    //qDebug() << player->getPtDir() << " " << player->getDir();
 }
 
 void RaycastingPainter::castRays(QPointF position, QPointF direction, int width)
@@ -70,7 +56,7 @@ void RaycastingPainter::castRays(QPointF position, QPointF direction, int width)
     for (int i=0; i<width/2; i++) {
         QPointF rayDirect1 (direction - rayStep*i);
 
-        QPointF intersectPt(INF,INF), tempPt(INF,INF);
+        QPointF intersectPt(INF,INF);
 
         int texture_id=-1;
 
@@ -116,48 +102,53 @@ void RaycastingPainter::castRays(QPointF position, QPointF direction, int width)
     this->update();
 }
 
-void RaycastingPainter::makeColumn(double dist, int ii, int texture, double e)
+void RaycastingPainter::makeColumn(double dist, int ii, int texture, double e) // shader !!! "e" - the distance between rayIntersection & an end of segment
 {
     int h = round(10000./dist);
-    if (dist == INF) {
-        h = 0;
-    }
+    if (dist == INF) {h = 0;}
 
-    h = std::min(h,HEIGHT);
+    QRgb cceil  = qRgb(133, 133, 133);
+    QRgb ffloor = qRgb(227, 227, 255);
+    QRgb wall   = qRgb(150, 0, 100);
 
-    QRgb cceil  = qRgb(133, 133, 133),
-         ffloor = qRgb(227, 227, 255),
-         wwall   = qRgb(150,150,0);
+    int wallBeg = (HEIGHT/2-h/2);
+    int wallEnd = (HEIGHT/2+h/2);
 
-    for (int i=0; i<HEIGHT/2-h/2; i++) {
+    for (int i=0; i<wallBeg; i++) {
         rbuffer.setPixel(ii,i,ffloor);
-        //в дальнейшем Qrgb заменится на текстурку
     }
-
 
     if (texture >= 0) {
         int wdth = textures[texture].width();
         int hght = textures[texture].height();
 
-        QImage texturedColumn = textures[texture].scaled(wdth*h/hght,h);
-        e = int(round(e*texturedColumn.width()/5))%texturedColumn.width();
-        int wallBeg = (HEIGHT/2-h/2);
-        for (int i=wallBeg; i<HEIGHT/2+h/2; i++) {
-            rbuffer.setPixel(ii,i,texturedColumn.pixel(e,i-wallBeg));
+//        QImage texturedColumn = textures[texture].scaled(wdth*h/hght,h);
+//        e = int(round(e/wdth))%texturedColumn.width();
+//        for (int i=wallBeg; i<wallEnd; i++) {
+//            rbuffer.setPixel(ii,i,texturedColumn.pixel(e,i-wallBeg));
+//            //rbuffer.setPixel(ii,i,wall);
+//        }
+
+        QImage textureColumn = (textures[texture].copy(int(round(e))%wdth,1,1,h)).scaled(1,h);
+
+        qDebug() <<int(round(e));
+
+        for (int i=wallBeg; i<wallEnd; i++) {
+            if (i>=wallBeg && i<HEIGHT) {
+                //rbuffer.setPixel(ii,i,wall);
+                if (i>=0 && i<HEIGHT) {
+                    rbuffer.setPixel(ii,i,textureColumn.pixel(0,i-wallBeg));
+                }
+            }
         }
     }
 
-    for (int i=HEIGHT/2+h/2; i<HEIGHT; i++) {
+    for (int i=wallEnd; i<HEIGHT; i++) {
         rbuffer.setPixel(ii,i,cceil);
     }
 }
 
-QImage RaycastingPainter::getRbuffer()
-{
-    return rbuffer;
-}
-
-void RaycastingPainter::setRbuffer(const QImage &value)
-{
-    rbuffer = value;
-}
+QImage RaycastingPainter::getRbuffer() {return rbuffer;}
+void RaycastingPainter::setRbuffer(const QImage &value) {rbuffer = value;}
+Scene *RaycastingPainter::scene() {return m_scene;}
+void RaycastingPainter::setScene(Scene *scene) {m_scene = scene;}

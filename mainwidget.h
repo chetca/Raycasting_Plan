@@ -6,9 +6,10 @@
 #include <QtCore>
 #include <QApplication>
 #include <QDesktopWidget>
+#include <QTime>
 
 #include "raycastingpainter.h"
-#include "gamescreen.h"
+#include "mygeom.h"
 
 namespace Ui {
 class mainwidget;
@@ -23,8 +24,8 @@ public:
     ~mainwidget();
 
     void paintEvent(QPaintEvent *event);
+    void keyPressEvent(QKeyEvent *event);
     void timerEvent(QTimerEvent *event);
-    void update();
     const QPoint screenCentre = QApplication::desktop()->screenGeometry().center();
 
 signals:
@@ -34,8 +35,10 @@ private:
     Ui::mainwidget *ui;
     QBasicTimer ticker;
 
+
+    QTime watch;
+
     RaycastingPainter *RP;
-    GameScreen *gameScreen;
     QImage *plScreen;
     QRectF *targetP;
 };
