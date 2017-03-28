@@ -42,7 +42,6 @@ void mainwidget::paintEvent(QPaintEvent *event)
 void mainwidget::keyPressEvent(QKeyEvent *event)
 {    
     event->accept();
-    qDebug() << event;
     if (event->key() == Qt::Key_W) {
         RP->player->setDX(cos(RP->player->getDir())*0.001);
         RP->player->setDY(sin(RP->player->getDir())*0.001);
@@ -62,6 +61,10 @@ void mainwidget::keyPressEvent(QKeyEvent *event)
     if (event->key() == Qt::Key_A) {
         RP->player->setDX(-sin(RP->player->getDir())*0.001);
         RP->player->setDY(cos(RP->player->getDir())*0.001);
+    }
+
+    if (event->key() == Qt::Key_Escape) {
+        this->close();
     }
     //emit(keyPressed(event));
 }

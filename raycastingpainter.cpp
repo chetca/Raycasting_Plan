@@ -20,13 +20,11 @@ RaycastingPainter::RaycastingPainter(QWidget *parent) : QWidget(parent) {
 void RaycastingPainter::paint()
 {
     castRays(player->getPos(), player->getPtDir(), WIDTH);
-    //qDebug() << player->getPtDir() << " " << player->getDir();
 }
 
 void RaycastingPainter::castRays(QPointF position, QPointF direction, int width)
 {
     //Метод описывающий бросание лучей
-
     QPointF rayStep = QPointF( /** (A,B) ---> (B,-A) **/ // вектор смотрит в право относительно pos & dir => rightViewSide = dir+(rayStep*width/2)
                  (direction-position).y(),
                 -(direction-position).x()
@@ -122,23 +120,11 @@ void RaycastingPainter::makeColumn(double dist, int ii, int texture, double e) /
         int wdth = textures[texture].width();
         int hght = textures[texture].height();
 
-//        QImage texturedColumn = textures[texture].scaled(wdth*h/hght,h);
-//        e = int(round(e/wdth))%texturedColumn.width();
-//        for (int i=wallBeg; i<wallEnd; i++) {
-//            rbuffer.setPixel(ii,i,texturedColumn.pixel(e,i-wallBeg));
-//            //rbuffer.setPixel(ii,i,wall);
-//        }
-
-        QImage textureColumn = (textures[texture].copy(int(round(e))%wdth,1,1,h)).scaled(1,h);
-
-        qDebug() <<int(round(e));
+        QImage textureColumn = (textures[texture].copy(int(round(e/2))%hght,1,1,hght)).scaled(1,h);
 
         for (int i=wallBeg; i<wallEnd; i++) {
-            if (i>=wallBeg && i<HEIGHT) {
-                //rbuffer.setPixel(ii,i,wall);
-                if (i>=0 && i<HEIGHT) {
-                    rbuffer.setPixel(ii,i,textureColumn.pixel(0,i-wallBeg));
-                }
+            if (i>=0 && i<HEIGHT) {
+                rbuffer.setPixel(ii,i,textureColumn.pixel(0,i-wallBeg));
             }
         }
     }

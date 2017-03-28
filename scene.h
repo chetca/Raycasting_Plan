@@ -13,8 +13,6 @@
 class Scene
 {
 public:
-
-
     Scene();
 
     QVector<SSegment> getMapSegment();
