@@ -39,28 +39,28 @@ void mainwidget::paintEvent(QPaintEvent *event)
     painter.drawImage(event->rect(), *plScreen, event->rect());
 }
 
-void mainwidget::keyPressEvent(QKeyEvent *event)
+void mainwidget::keyReleaseEvent(QKeyEvent *event)
 {    
     event->accept();
     if (event->key() == Qt::Key_W) {
-        RP->player->setDX(cos(RP->player->getDir())*0.001);
-        RP->player->setDY(sin(RP->player->getDir())*0.001);
+        RP->player->setDX(cos(RP->player->getDir()));
+        RP->player->setDY(sin(RP->player->getDir()));
     }
 
     if (event->key() == Qt::Key_S) {
-        RP->player->setDX(-cos(RP->player->getDir())*0.001);
-        RP->player->setDY(-sin(RP->player->getDir())*0.001);
+        RP->player->setDX(-cos(RP->player->getDir()));
+        RP->player->setDY(-sin(RP->player->getDir()));
 
     }
 
     if (event->key() == Qt::Key_D) {
-        RP->player->setDX(sin(RP->player->getDir())*0.001);
-        RP->player->setDY(-cos(RP->player->getDir())*0.001);
+        RP->player->setDX(sin(RP->player->getDir()));
+        RP->player->setDY(-cos(RP->player->getDir()));
     }
 
     if (event->key() == Qt::Key_A) {
-        RP->player->setDX(-sin(RP->player->getDir())*0.001);
-        RP->player->setDY(cos(RP->player->getDir())*0.001);
+        RP->player->setDX(-sin(RP->player->getDir()));
+        RP->player->setDY(cos(RP->player->getDir()));
     }
 
     if (event->key() == Qt::Key_Escape) {
@@ -69,10 +69,39 @@ void mainwidget::keyPressEvent(QKeyEvent *event)
     //emit(keyPressed(event));
 }
 
+void mainwidget::keyPressEvent(QKeyEvent *event)
+{
+    event->accept();
+    if (event->key() == Qt::Key_W) {
+        RP->player->setDX(cos(RP->player->getDir()));
+        RP->player->setDY(sin(RP->player->getDir()));
+    }
+
+    if (event->key() == Qt::Key_S) {
+        RP->player->setDX(-cos(RP->player->getDir()));
+        RP->player->setDY(-sin(RP->player->getDir()));
+
+    }
+
+    if (event->key() == Qt::Key_D) {
+        RP->player->setDX(sin(RP->player->getDir()));
+        RP->player->setDY(-cos(RP->player->getDir()));
+    }
+
+    if (event->key() == Qt::Key_A) {
+        RP->player->setDX(-sin(RP->player->getDir()));
+        RP->player->setDY(cos(RP->player->getDir()));
+    }
+
+    if (event->key() == Qt::Key_Escape) {
+        this->close();
+    }
+}
+
 void mainwidget::timerEvent(QTimerEvent *) {
     double time = watch.elapsed();
-    //watch.start();
-    RP->player->setDDIR((QCursor::pos().x()-screenCentre.x()) * (-0.000001));
+    watch.start();
+    RP->player->setDDIR((QCursor::pos().x()-screenCentre.x()));
     QCursor::setPos(screenCentre);
     RP->paint();
 

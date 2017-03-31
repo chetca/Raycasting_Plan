@@ -29,14 +29,16 @@ SOURCES += main.cpp\
     scene.cpp \
     ssegment.cpp \
     player.cpp \
-    mygeom.cpp
+    mygeom.cpp \
+    movablesegment.cpp
 
 HEADERS  += mainwidget.h \
     raycastingpainter.h \
     scene.h \
     ssegment.h \
     player.h \
-    mygeom.h
+    mygeom.h \
+    movablesegment.h
 
 FORMS    += mainwidget.ui
 

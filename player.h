@@ -20,7 +20,7 @@ public:
 
     double getDir() const;
     void setDir(double value);
-    void update(double time);
+    void update(double &time);
 
     QPointF getPtDir();
 

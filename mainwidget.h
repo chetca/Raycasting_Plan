@@ -24,6 +24,7 @@ public:
     ~mainwidget();
 
     void paintEvent(QPaintEvent *event);
+    void keyReleaseEvent(QKeyEvent *event);
     void keyPressEvent(QKeyEvent *event);
     void timerEvent(QTimerEvent *event);
     const QPoint screenCentre = QApplication::desktop()->screenGeometry().center();

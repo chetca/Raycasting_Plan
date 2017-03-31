@@ -5,9 +5,10 @@
 
 Player::Player(QObject *parent) : QObject(parent)
 {    
-    pos = QPointF(50000,6000);
+    pos = QPointF(0,0);
     dx = dy = 0;
-    dir = 12;
+    ddir = 0;
+    dir = 0;
 }
 
 QPointF Player::getPos() const{return pos;}
@@ -18,14 +19,15 @@ double Player::getDir() const {return dir;}
 
 void Player::setDir(double value) {dir = value;}
 
-void Player::update(double time)
+void Player::update(double &time)
 {
     pos.setX(pos.x() + dx*time*0.1);
     pos.setY(pos.y() + dy*time*0.1);
-    dir += (ddir*time*0.1);
+    dir += (ddir*time*(-0.00001));
     ddir=0;
     dx=0;
     dy=0;
+    time = 0;
 }
 
 QPointF Player::getPtDir()
