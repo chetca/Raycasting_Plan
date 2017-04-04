@@ -27,18 +27,15 @@ public:
     void setScene(Scene *scene);
     void castRays(QPointF position, QPointF direction, int width);
 
-    double getWidth() const;
-    void setWidth(double value);
-
     void makeColumn(double dist, int i, int texture, double e);
-
+    void updateScene(double time);
 private:
     Scene *m_scene = 0;
-    QImage rbuffer;
     QVector <QImage> textures;
 
 public: Player *player;
     QImage getRbuffer();
+    QImage rbuffer;
     void setRbuffer(const QImage &value);
 };
 

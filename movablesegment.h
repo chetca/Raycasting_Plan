@@ -5,15 +5,16 @@
 #include "mygeom.h"
 
 #include <QPointF>
+#include <QtGlobal>
 
 class MovableSegment : public SSegment
 {
 public:
     MovableSegment(SSegment *parent=0);
-    MovableSegment(QPointF moveCentre, double l1, double l2, double speed, SSegment *parent=0);
+    MovableSegment(QPointF a, QPointF b, QPointF moveCentre, int texture=0, double l1=0, double l2=0, double speed=0, SSegment *parent=0);
 
 private:
-    void update(double &time);
+
 
 public:
     QPointF mvPt;   // centre of moving
@@ -21,6 +22,8 @@ public:
     double l1,l2;   // between that angles move will execute (if l1>l2 then segment moves clockwise, else ccw)
     double l;       // current angle
     double len;
+    void update(double &time);
+
 };
 
 #endif // MOVABLESEGMENT_H

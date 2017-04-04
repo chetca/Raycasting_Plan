@@ -25,8 +25,8 @@ void RaycastingPainter::paint()
 void RaycastingPainter::castRays(QPointF position, QPointF direction, int width)
 {
     //Метод описывающий бросание лучей
-    QPointF rayStep = QPointF( /** (A,B) ---> (B,-A) **/ // вектор смотрит в право относительно pos & dir => rightViewSide = dir+(rayStep*width/2)
-                 (direction-position).y(),
+    QPointF rayStep = QPointF( /** (A,B) ---> (B,-A) **/
+                 (direction-position).y(),  // вектор смотрит в право относительно pos & dir => rightViewSide = dir+(rayStep*width/2)
                 -(direction-position).x()
                 )*1.5/width; //1.5 - половина ширины экрана в 1.5 раз меньше чем длина отрезка [pos,dir]. Формула определения угла обзора
     // в будущем необходимо вынести этот коэффициент в файл для настроек.
@@ -100,9 +100,9 @@ void RaycastingPainter::castRays(QPointF position, QPointF direction, int width)
     this->update();
 }
 
-void RaycastingPainter::makeColumn(double dist, int ii, int texture, double e) // shader !!! "e" - the distance between rayIntersection & an end of segment
+void RaycastingPainter::makeColumn (double dist, int ii, int texture, double e) // shader !!! "e" - the distance between rayIntersection & an end of segment
 {
-    int h = round(10000./dist);
+    int h = round(WORLDSIZE/dist);
     if (dist == INF) {h = 0;}
 
     QRgb cceil  = qRgb(133, 133, 133);
@@ -120,18 +120,29 @@ void RaycastingPainter::makeColumn(double dist, int ii, int texture, double e) /
         int wdth = textures[texture].width();
         int hght = textures[texture].height();
 
-        QImage textureColumn = (textures[texture].copy(int(round(e/2))%hght,1,1,hght)).scaled(1,h);
+        //QImage textureColumn = (textures[texture].copy(int(round(e/2))%hght,1,1,hght)).scaled(1,h);
+
+        e = int(round(e*wdth/25))%wdth;
+        double yStep = (double)hght/h;
+        double yTe = 0;
 
         for (int i=wallBeg; i<wallEnd; i++) {
             if (i>=0 && i<HEIGHT) {
-                rbuffer.setPixel(ii,i,textureColumn.pixel(0,i-wallBeg));
+                rbuffer.setPixel(ii,i,textures[texture].pixel(e,yTe));
+//                rbuffer.setPixel(ii,i,wall);
             }
+            yTe += yStep;
         }
     }
 
     for (int i=wallEnd; i<HEIGHT; i++) {
         rbuffer.setPixel(ii,i,cceil);
     }
+}
+
+void RaycastingPainter::updateScene(double time)
+{
+    m_scene->update(time);
 }
 
 QImage RaycastingPainter::getRbuffer() {return rbuffer;}

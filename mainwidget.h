@@ -7,6 +7,7 @@
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QTime>
+#include <QLabel>
 
 #include "raycastingpainter.h"
 #include "mygeom.h"
@@ -36,12 +37,13 @@ private:
     Ui::mainwidget *ui;
     QBasicTimer ticker;
 
-
     QTime watch;
 
+    QLabel *fps;
     RaycastingPainter *RP;
     QImage *plScreen;
     QRectF *targetP;
+    int FPS;
 };
 
 #endif // MAINWIDGET_H

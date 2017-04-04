@@ -9,8 +9,9 @@
 
 #define PI (acos(-1.))
 #define INF 1e9
-#define WIDTH 1280
-#define HEIGHT 720
+#define WIDTH 1200
+#define HEIGHT 700
+#define WORLDSIZE 20000.
 
 double  vec                      ( QPointF a,  QPointF b,  QPointF c);
 double  getDist                  ( QPointF a,  QPointF b);

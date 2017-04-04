@@ -2,6 +2,7 @@
 #define SCENE_H
 
 #include "ssegment.h"
+#include "movablesegment.h"
 
 #include <QPointF>
 #include <QVector>
@@ -15,16 +16,17 @@ class Scene
 public:
     Scene();
 
-    QVector<SSegment> getMapSegment();
-    SSegment getMapSegment(int i);
-    void setMapSegment(const QVector<SSegment> &value);
+    QVector<MovableSegment> getMapSegment();
+    MovableSegment getMapSegment(int i);
+    void setMapSegment(const QVector<MovableSegment> &value);
 
     int getCnt();
     void setCnt(int value);
     void swapSegmentsEnds(int i);
+    void update(double time);
 
 private:
-    QVector<SSegment> mapSegment;
+    QVector<MovableSegment> mapSegment;
 
 public:
     QPointF ps;

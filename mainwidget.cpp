@@ -25,6 +25,11 @@ mainwidget::mainwidget(QWidget *parent) :
     setMouseTracking(1);
 
     plScreen = new QImage (WIDTH, HEIGHT, QImage::Format_ARGB32);
+
+    fps = new QLabel(this);
+    fps->setGeometry(0,0,100,30);
+    fps->setFont(QFont("",22));
+    FPS = 0;
 }
 
 mainwidget::~mainwidget()
@@ -36,7 +41,7 @@ void mainwidget::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
     painter.setCompositionMode(QPainter::CompositionMode_Source);
-    painter.drawImage(event->rect(), *plScreen, event->rect());
+    painter.drawImage(event->rect(), RP->rbuffer, event->rect());
 }
 
 void mainwidget::keyReleaseEvent(QKeyEvent *event)
@@ -100,13 +105,31 @@ void mainwidget::keyPressEvent(QKeyEvent *event)
 
 void mainwidget::timerEvent(QTimerEvent *) {
     double time = watch.elapsed();
+
+    static double k;
+    static double tk;
+
+    tk += time;
+
     watch.start();
+
+    fps->setText(QString::number(FPS));
+
     RP->player->setDDIR((QCursor::pos().x()-screenCentre.x()));
     QCursor::setPos(screenCentre);
     RP->paint();
 
-    *plScreen = RP->getRbuffer();
-    RP->player->update(time);
 
-    //this->update();
+    RP->player->update(time);
+    RP->updateScene(time);
+
+
+
+    if (++k == 10) {
+        FPS = 1000*k/tk;
+        tk=0;
+        k=0;
+    }
+
+    this->update();
 }

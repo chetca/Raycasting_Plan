@@ -1,6 +1,8 @@
 #include "ssegment.h"
 #include "mygeom.h"
 
+#include <QDebug>
+
 SSegment::SSegment()
 {
 
@@ -53,4 +55,9 @@ int SSegment::getTexture() const
 void SSegment::setTexture(int value)
 {
     texture = value;
+}
+
+void SSegment::update(double time)
+{
+    //MovableSegment::update(time);
 }

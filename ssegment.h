@@ -5,6 +5,8 @@
 #include <cmath>
 #include <algorithm>
 
+//#include "movablesegment.h";
+
 class SSegment
 {
 public:
@@ -22,7 +24,9 @@ public:
     void swapEnds();
 
     int getTexture() const;
-    void setTexture(int value);
+    void setTexture(int value);   
+
+    virtual void update(double time);
 
 private:
     QPointF a,b;

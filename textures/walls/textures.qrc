@@ -3,5 +3,20 @@
         <file>wall1.jpg</file>
         <file>wall2.jpg</file>
         <file>doors2.jpg</file>
+        <file>celling.jpg</file>
+        <file>doorLVL.jpg</file>
+        <file>doorMA.jpg</file>
+        <file>doors1.jpg</file>
+        <file>exit.jpg</file>
+        <file>floor1.jpg</file>
+        <file>floor2.jpg</file>
+        <file>GStand1.jpg</file>
+        <file>GStand2.jpg</file>
+        <file>stand1.jpg</file>
+        <file>stand2.jpg</file>
+        <file>stand3.jpg</file>
+        <file>stand4.jpg</file>
+        <file>window1.jpg</file>
+        <file>window2.jpg</file>
     </qresource>
 </RCC>
