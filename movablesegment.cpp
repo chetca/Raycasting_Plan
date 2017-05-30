@@ -9,10 +9,6 @@ MovableSegment::MovableSegment(SSegment *parent)
 
 MovableSegment::MovableSegment(QPointF a, QPointF b, QPointF moveCentre, int texture, double l1, double l2, double speed, SSegment *parent) : SSegment(a,b,texture)
 {
-
-//    this->a = a;
-//    this->b = b;
-
     mvPt = moveCentre;
     this->l1 = l1;
     this->l2 = l2;
@@ -25,7 +21,6 @@ MovableSegment::MovableSegment(QPointF a, QPointF b, QPointF moveCentre, int tex
 
 void MovableSegment::update(double &time)
 {
-    //qDebug() << "LOL";
     time = qBound(1.,time,200.);
     if (l1 > l2) {
         if (l+du*time<=l2) {

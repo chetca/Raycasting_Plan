@@ -8,8 +8,11 @@
 #include <QDesktopWidget>
 #include <QTime>
 #include <QLabel>
+#include <QGraphicsView>
+#include <QSet>
 
 #include "raycastingpainter.h"
+#include "minimapplayer.h"
 #include "mygeom.h"
 
 namespace Ui {
@@ -30,6 +33,7 @@ public:
     void timerEvent(QTimerEvent *event);
     const QPoint screenCentre = QApplication::desktop()->screenGeometry().center();
 
+
 signals:
     void keyPressed(QKeyEvent *event);
 
@@ -41,9 +45,11 @@ private:
 
     QLabel *fps;
     RaycastingPainter *RP;
-    QImage *plScreen;
     QRectF *targetP;
+    QGraphicsView *miniMap;
     int FPS;
+    MiniMapPlayer *plRect;
+    QGraphicsScene *mmap;
 };
 
 #endif // MAINWIDGET_H

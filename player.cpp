@@ -11,23 +11,25 @@ Player::Player(QObject *parent) : QObject(parent)
     dir = 0;
 }
 
-QPointF Player::getPos() const{return pos;}
 
-void Player::setPos(const QPointF &value) {pos = value;}
+QPointF Player::    getPos()                     const  {return pos;}
+void    Player::    setPos(const QPointF &value)        {pos = value;}
+double  Player::   getDir()                      const  {return dir;}
+void    Player::    setDir(double value)                {dir = value;}
 
-double Player::getDir() const {return dir;}
-
-void Player::setDir(double value) {dir = value;}
 
 void Player::update(double &time)
 {
-    pos.setX(pos.x() + dx*time*0.1);
-    pos.setY(pos.y() + dy*time*0.1);
+    pos.setX(pos.x() + dx*time*0.01);
+    pos.setY(pos.y() + dy*time*0.01);
     dir += (ddir*time*(-0.00001));
-    ddir=0;
-    dx=0;
-    dy=0;
     time = 0;
+}
+
+void Player::back(double &time)
+{
+    pos.setX(pos.x() - dx*time*0.01);
+    pos.setY(pos.y() - dy*time*0.01);
 }
 
 QPointF Player::getPtDir()
@@ -35,6 +37,6 @@ QPointF Player::getPtDir()
     return QPointF(cos(dir)*10,sin(dir)*10) + pos;
 }
 
-void Player::setDX(double r)   {dx = r;}
-void Player::setDY(double r)   {dy = r;}
-void Player::setDDIR(double r) {ddir = r;}
+void Player::setDX   (double r)  {dx = r;}
+void Player::setDY   (double r)  {dy = r;}
+void Player::setDDIR (double r)  {ddir = r;}

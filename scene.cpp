@@ -8,8 +8,9 @@
 Scene::Scene()
 {
 //    QFile mapTxt("/home/chetca/Projects/Raycasting_Plan-test/testlevel.map");
-    QFile mapTxt("/Users/dugar/Desktop/Raycasting_Plan-test/testlevel.map");
-
+//    QFile mapTxt("/Users/dugar/Desktop/Raycasting_Plan-test/testlevel.map");
+//    QFile mapTxt("/Users/dugar/Desktop/Raycasting_Plan-test/second.map");
+    QFile mapTxt("/home/chetca/Projects/Raycasting_Plan-test/second.map");
     if (!mapTxt.open(QIODevice::ReadOnly)) {qDebug() << "file can't be opened";}
     else {qDebug() << "successfull opening file !";}
     bool FF=0;
@@ -47,7 +48,7 @@ Scene::Scene()
 //    mapSegment.push_back(MovableSegment(QPointF(140,60), QPointF(160, 60), QPointF(100,-20), 1, 0,0,0.4));
 
 //    mapSegment.push_back(MovableSegment(QPointF(100,10), QPointF(100,-20), QPointF(100,-20), 0,0,0.4));
-//    mapSegment.push_back(MovableSegment(QPointF(100,10), QPointF(100,-20), QPointF(100,-20), 0,0,0.4));
+//    mapSegment.push_back(MovableSegment(QPointF(100,10), QPointF(100,-20), QPointF(100,-20), 2,  0,1000,0.05));
 }
 
 QVector<MovableSegment> Scene::getMapSegment()

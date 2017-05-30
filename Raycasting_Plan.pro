@@ -30,7 +30,8 @@ SOURCES += main.cpp\
     ssegment.cpp \
     player.cpp \
     mygeom.cpp \
-    movablesegment.cpp
+    movablesegment.cpp \
+    minimapplayer.cpp
 
 HEADERS  += mainwidget.h \
     raycastingpainter.h \
@@ -38,12 +39,15 @@ HEADERS  += mainwidget.h \
     ssegment.h \
     player.h \
     mygeom.h \
-    movablesegment.h
+    movablesegment.h \
+    minimapplayer.h
 
 FORMS    += mainwidget.ui
 
 RESOURCES += \
-    textures/walls/textures.qrc
+    textures/walls/textures.qrc \
+    textures/player/txtres.qrc
 
 DISTFILES += \
-    testlevel.map
+    testlevel.map \
+    second.map
